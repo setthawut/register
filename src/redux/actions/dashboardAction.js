@@ -1,26 +1,28 @@
 import axios from "axios";
 import { pathAddress } from "../../constants/index";
-import { message } from "antd";
 import { db } from "../../config";
 import { collection, addDoc } from "firebase/firestore";
+import { message } from "antd";
+import {
+  GET_DASHBOARD_REQUEST,
+  GET_DASHBOARD_SUCCESS,
+  GET_DASHBOARD_ERROR,
+  GET_ADDRESS_REQUEST,
+  GET_ADDRESS_SUCCESS,
+  GET_ADDRESS_ERROR,
+  GET_ADDRESS_DISTRICT_REQUEST,
+  GET_ADDRESS_DISTRICT_SUCCESS,
+  GET_ADDRESS_DISTRICT_ERROR,
+  GET_ADDRESS_SUBDISTRICT_REQUEST,
+  GET_ADDRESS_SUBDISTRICT_SUCCESS,
+  GET_ADDRESS_SUBDISTRICT_ERROR,
+  CREATE_PROFILE_REQUEST,
+  CREATE_PROFILE_SUCCESS,
+  CREATE_PROFILE_ERROR,
+  SHOW_DATA,
+  SET_CURRENT_STEP,
+} from "../../constants/index";
 const userCollectionRef = collection(db, "users");
-
-let GET_DASHBOARD_REQUEST = "GET_DASHBOARD_REQUEST";
-let GET_DASHBOARD_SUCCESS = "GET_DASHBOARD_SUCCESS";
-let GET_DASHBOARD_ERROR = "GET_DASHBOARD_ERROR";
-let GET_ADDRESS_REQUEST = "GET_ADDRESS_REQUEST";
-let GET_ADDRESS_SUCCESS = "GET_ADDRESS_SUCCESS";
-let GET_ADDRESS_ERROR = "GET_ADDRESS_ERROR";
-let GET_ADDRESS_DISTRICT_REQUEST = "GET_ADDRESS_DISTRICT_REQUEST";
-let GET_ADDRESS_DISTRICT_SUCCESS = "GET_ADDRESS_DISTRICT_SUCCESS";
-let GET_ADDRESS_DISTRICT_ERROR = "GET_ADDRESS_DISTRICT_ERROR";
-let GET_ADDRESS_SUBDISTRICT_REQUEST = "GET_ADDRESS_SUBDISTRICT_REQUEST";
-let GET_ADDRESS_SUBDISTRICT_SUCCESS = "GET_ADDRESS_SUBDISTRICT_SUCCESS";
-let GET_ADDRESS_SUBDISTRICT_ERROR = "GET_ADDRESS_SUBDISTRICT_ERROR";
-let CREATE_PROFILE_REQUEST = "CREATE_PROFILE_REQUEST";
-let CREATE_PROFILE_SUCCESS = "CREATE_PROFILE_SUCCESS";
-let CREATE_PROFILE_ERROR = "CREATE_PROFILE_ERROR";
-let SHOW_DATA = "SHOW_DATA";
 
 export function getDashboard() {
   return (dispatch) => {
@@ -122,10 +124,22 @@ export function getAddressSubDistrict(province, district) {
 export function createProfile(value) {
   return (dispatch) => {
     dispatch({ type: CREATE_PROFILE_REQUEST });
-    console.log("value", value);
+    message.loading({
+      content: "Loading....",
+      className: "custom-class",
+      style: {
+        marginTop: "20vh",
+      },
+    });
     addDoc(userCollectionRef, value)
       .then((res) => {
-        console.log("res", res);
+        message.success({
+          content: "Create Success!!",
+          className: "custom-class",
+          style: {
+            marginTop: "20vh",
+          },
+        });
         dispatch({
           type: CREATE_PROFILE_SUCCESS,
           // payload: response.data,
@@ -133,6 +147,9 @@ export function createProfile(value) {
       })
       .catch((err) => {
         console.log(err);
+        dispatch({
+          type: CREATE_PROFILE_ERROR,
+        });
       });
     // axios
     //   .post("/api/forms", value)
@@ -151,5 +168,14 @@ export function createProfile(value) {
     //       payload: error,
     //     });
     //   });
+  };
+}
+
+export function setCurrentStep(value) {
+  return (dispatch) => {
+    dispatch({
+      type: SET_CURRENT_STEP,
+      payload: value,
+    });
   };
 }

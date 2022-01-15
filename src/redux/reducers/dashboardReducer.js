@@ -1,16 +1,22 @@
-let GET_DASHBOARD_REQUEST = "GET_DASHBOARD_REQUEST";
-let GET_DASHBOARD_SUCCESS = "GET_DASHBOARD_SUCCESS";
-let GET_DASHBOARD_ERROR = "GET_DASHBOARD_ERROR";
-let GET_ADDRESS_REQUEST = "GET_ADDRESS_REQUEST";
-let GET_ADDRESS_SUCCESS = "GET_ADDRESS_SUCCESS";
-let GET_ADDRESS_ERROR = "GET_ADDRESS_ERROR";
-let GET_ADDRESS_DISTRICT_REQUEST = "GET_ADDRESS_DISTRICT_REQUEST";
-let GET_ADDRESS_DISTRICT_SUCCESS = "GET_ADDRESS_DISTRICT_SUCCESS";
-let GET_ADDRESS_DISTRICT_ERROR = "GET_ADDRESS_DISTRICT_ERROR";
-let GET_ADDRESS_SUBDISTRICT_REQUEST = "GET_ADDRESS_SUBDISTRICT_REQUEST";
-let GET_ADDRESS_SUBDISTRICT_SUCCESS = "GET_ADDRESS_SUBDISTRICT_SUCCESS";
-let GET_ADDRESS_SUBDISTRICT_ERROR = "GET_ADDRESS_SUBDISTRICT_ERROR";
-let SHOW_DATA = "SHOW_DATA";
+import {
+  GET_DASHBOARD_REQUEST,
+  GET_DASHBOARD_SUCCESS,
+  GET_DASHBOARD_ERROR,
+  GET_ADDRESS_REQUEST,
+  GET_ADDRESS_SUCCESS,
+  GET_ADDRESS_ERROR,
+  GET_ADDRESS_DISTRICT_REQUEST,
+  GET_ADDRESS_DISTRICT_SUCCESS,
+  GET_ADDRESS_DISTRICT_ERROR,
+  GET_ADDRESS_SUBDISTRICT_REQUEST,
+  GET_ADDRESS_SUBDISTRICT_SUCCESS,
+  GET_ADDRESS_SUBDISTRICT_ERROR,
+  CREATE_PROFILE_REQUEST,
+  CREATE_PROFILE_SUCCESS,
+  CREATE_PROFILE_ERROR,
+  SHOW_DATA,
+  SET_CURRENT_STEP,
+} from "../../constants/index";
 
 const INITIAL_STATE = {
   dashboard: [],
@@ -21,6 +27,7 @@ const INITIAL_STATE = {
   dataDistrict: [],
   dataSubDistrict: [],
   refreshPage: false,
+  currentStep: 0,
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -42,6 +49,25 @@ export default (state = INITIAL_STATE, action) => {
       return {
         ...state,
         fetchError: "Get Dashboard error.",
+        fetchRequesting: false,
+      };
+    //Create
+    case CREATE_PROFILE_REQUEST:
+      return {
+        ...state,
+        fetchRequesting: true,
+        fetchError: "",
+        refreshPage: false,
+      };
+    case CREATE_PROFILE_SUCCESS:
+      return {
+        ...state,
+        refreshPage: true,
+      };
+    case CREATE_PROFILE_ERROR:
+      return {
+        ...state,
+        fetchError: "Create dataProvince error.",
         fetchRequesting: false,
       };
     // Address Province
@@ -100,6 +126,13 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         fetchError: "Get data SubDistrict error.",
         fetchRequesting: false,
+      };
+
+    //Current Step
+    case SET_CURRENT_STEP:
+      return {
+        ...state,
+        currentStep: action.payload,
       };
     //Show Data
     case SHOW_DATA:

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { mapDispatchToProps } from "../../redux/actions/index";
-import { Steps, Button, message, Form } from "antd";
+import { Steps, Button, Form, Spin, Alert } from "antd";
 import PersonnalForm from "../../components/PersonalForm";
 import CompanyForm from "../../components/CompanyForm";
 import ConfirmForm from "../../components/ConfirmForm";
@@ -18,16 +18,27 @@ const steps = [
   {
     title: "Confirm",
   },
+  
 ];
 
-const Dashboard = ({ showData, data, getAddress, createProfile }) => {
+const Dashboard = ({
+  showData,
+  data,
+  getAddress,
+  createProfile,
+  currentStep,
+  setCurrentStep,
+  refreshPage,
+}) => {
   const [current, setCurrent] = useState(0);
   const [base64Img, setBase64Img] = useState([]);
+
   const [formStep1] = Form.useForm();
   const [formStep2] = Form.useForm();
   useEffect(() => {
     getAddress();
   }, []);
+
   const onSubmit = async () => {
     createProfile(await mapCreateProfileToRequest(data));
   };
@@ -37,20 +48,20 @@ const Dashboard = ({ showData, data, getAddress, createProfile }) => {
     let step2 = await formStep2.validateFields();
 
     try {
-      if (current === 0) {
+      if (currentStep === 0) {
         showData(step1);
-      } else if (current === 1) {
+      } else if (currentStep === 1) {
         showData({ ...data, ...step2, imgProfileBase64: base64Img });
       }
     } catch (err) {}
-    setCurrent(current + 1);
+    setCurrentStep(currentStep + 1);
   };
 
   const prev = () => {
-    setCurrent(current - 1);
+    setCurrentStep(currentStep - 1);
   };
   const setFormContent = () => {
-    switch (current) {
+    switch (currentStep) {
       case 0:
         return (
           <PersonnalForm formStep1={formStep1} setBase64Img={setBase64Img} />
@@ -65,24 +76,24 @@ const Dashboard = ({ showData, data, getAddress, createProfile }) => {
   };
   return (
     <>
-      <Steps current={current}>
+      <Steps current={currentStep}>
         {steps.map((item) => (
           <Step key={item.title} title={item.title} />
         ))}
       </Steps>
       <div className="steps-content">{setFormContent()}</div>
       <div className="steps-action">
-        {current < steps.length - 1 && (
+        {currentStep < steps.length - 1 && currentStep != 2 && (
           <Button type="primary" onClick={() => next()}>
             Next
           </Button>
         )}
-        {current === steps.length - 1 && (
+        {currentStep === 2 && (
           <Button type="primary" onClick={() => onSubmit()}>
-            Done
+            Submit
           </Button>
         )}
-        {current > 0 && (
+        {currentStep > 0 && (
           <Button style={{ margin: "0 8px" }} onClick={() => prev()}>
             Previous
           </Button>
@@ -94,6 +105,8 @@ const Dashboard = ({ showData, data, getAddress, createProfile }) => {
 function mapStateToProps(state) {
   return {
     data: state.dashboard.data,
+    currentStep: state.dashboard.currentStep,
+    refreshPage: state.dashboard.refreshPage,
   };
 }
 

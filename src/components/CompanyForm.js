@@ -30,6 +30,7 @@ const CompanyForm = ({
         span: 14,
       },
     },
+    inputWidth: { width: "70%" },
   };
   const handleChangeAddressProvince = (province) => {
     setProvinceData(province);
@@ -45,12 +46,31 @@ const CompanyForm = ({
         {...formItemLayout}
         layout="horizontal"
         form={formStep2}
-        hideRequiredMark
+        style={{ marginTop: "40px" }}
       >
-        <Form.Item label="ชื่อบริษัท" id="companyName" name="companyName">
-          <Input placeholder="ชื่อบริษัท" />
+        <Form.Item
+          label="ชื่อบริษัท"
+          id="companyName"
+          name="companyName"
+          rules={[
+            {
+              required: true,
+              message: "กรุณากรอกข้อมูล",
+            },
+          ]}
+        >
+          <Input placeholder="ชื่อบริษัท" style={formItemLayout.inputWidth} />
         </Form.Item>
-        <Form.Item name="provinceCompany" label="จังหวัด">
+        <Form.Item
+          name="provinceCompany"
+          label="จังหวัด"
+          rules={[
+            {
+              required: true,
+              message: "กรุณาเลือกจังหวัด",
+            },
+          ]}
+        >
           <Select style={{ width: 120 }} onChange={handleChangeAddressProvince}>
             {!!dataProvince &&
               !!dataProvince.data &&
@@ -61,7 +81,16 @@ const CompanyForm = ({
               ))}
           </Select>
         </Form.Item>
-        <Form.Item name="districtCompany" label="อำเภอ">
+        <Form.Item
+          name="districtCompany"
+          label="อำเภอ"
+          rules={[
+            {
+              required: true,
+              message: "กรุณาเลือกอำเภอ",
+            },
+          ]}
+        >
           <Select style={{ width: 120 }} onChange={handleChangeAddressDistrict}>
             {!!dataDistrict &&
               !!dataDistrict.data &&
@@ -72,7 +101,16 @@ const CompanyForm = ({
               ))}
           </Select>
         </Form.Item>
-        <Form.Item name="subDistrictCompany" label="ตำบล">
+        <Form.Item
+          name="subDistrictCompany"
+          label="ตำบล"
+          rules={[
+            {
+              required: true,
+              message: "กรุณาเลือกตำบล",
+            },
+          ]}
+        >
           <Select style={{ width: 120 }}>
             {!!dataSubDistrict &&
               !!dataSubDistrict.data &&

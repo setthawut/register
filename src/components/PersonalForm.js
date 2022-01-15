@@ -23,6 +23,7 @@ const formItemLayout = {
       span: 14,
     },
   },
+  inputWidth: { width: "70%" },
 };
 
 export function toBase64(file) {
@@ -54,6 +55,7 @@ const PersonalForm = ({
   dataDistrict,
   getAddressSubDistrict,
   dataSubDistrict,
+ 
 }) => {
   const [loading, setLoading] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
@@ -103,9 +105,17 @@ const PersonalForm = ({
         {...formItemLayout}
         form={formStep1}
         layout="horizontal"
-        hideRequiredMark
+        style={{ marginTop: "40px" }}
       >
-        <Form.Item label="รูป" >
+        <Form.Item
+          label="รูป"
+          rules={[
+            {
+              required: true,
+              message: "กรุณารูปภาพ",
+            },
+          ]}
+        >
           <Upload
             name="avatar"
             listType="picture-card"
@@ -129,11 +139,11 @@ const PersonalForm = ({
           rules={[
             {
               required: true,
-              message: "请输入收款人姓名",
+              message: "กรุณากรอกข้อมูล",
             },
           ]}
         >
-          <Input placeholder="ชื่อ (TH)" />
+          <Input placeholder="ชื่อ (TH)" style={formItemLayout.inputWidth} />
         </Form.Item>
         <Form.Item
           label="ชื่อ (EN)"
@@ -141,11 +151,11 @@ const PersonalForm = ({
           rules={[
             {
               required: true,
-              message: "请输入收款人姓名",
+              message: "กรุณากรอกข้อมูล",
             },
           ]}
         >
-          <Input placeholder="ชื่อ (EN)" />
+          <Input placeholder="ชื่อ (EN)" style={formItemLayout.inputWidth} />
         </Form.Item>
         <Form.Item
           label="นามสกุล (EN)"
@@ -153,11 +163,11 @@ const PersonalForm = ({
           rules={[
             {
               required: true,
-              message: "请输入收款人姓名",
+              message: "กรุณากรอกข้อมูล",
             },
           ]}
         >
-          <Input placeholder="นามสกุล (EN)" />
+          <Input placeholder="นามสกุล (EN)" style={formItemLayout.inputWidth} />
         </Form.Item>
         <Form.Item
           label="นามสกุล (TH)"
@@ -165,18 +175,24 @@ const PersonalForm = ({
           rules={[
             {
               required: true,
-              message: "请输入收款人姓名",
+              message: "กรุณากรอกข้อมูล",
             },
           ]}
         >
-          <Input placeholder="นามสกุล (TH)" />
+          <Input placeholder="นามสกุล (TH)" style={formItemLayout.inputWidth} />
         </Form.Item>
-        <Form.Item label="วัน/เดือน/ปี เกิด" hasFeedback name={"birthDay"}>
-          <DatePicker
-            style={{
-              width: "50%",
-            }}
-          />
+        <Form.Item
+          label="วัน/เดือน/ปี เกิด"
+          hasFeedback
+          name={"birthDay"}
+          rules={[
+            {
+              required: true,
+              message: "กรุณากรอกข้อมูล",
+            },
+          ]}
+        >
+          <DatePicker style={formItemLayout.inputWidth} />
         </Form.Item>
         <Form.Item
           label="เลขบัตรประชาชน"
@@ -184,11 +200,22 @@ const PersonalForm = ({
           rules={[
             {
               required: true,
-              message: "请输入收款人姓名",
+              message: "กรุณากรอกข้อมูล",
+            },
+            {
+              pattern: new RegExp(/^[0-9\b]+$/),
+              message: "กรุณากรอกตัวเลขเท่านั้น",
+            },
+            {
+              len: 13,
+              message: "กรุณากรอกตัวเลข 13 ตัว",
             },
           ]}
         >
-          <Input placeholder="เลขบัตรประชำชน" />
+          <Input
+            placeholder="เลขบัตรประชำชน"
+            style={formItemLayout.inputWidth}
+          />
         </Form.Item>
         <Form.Item
           label="เบอร์โทรศัพท์"
@@ -196,14 +223,30 @@ const PersonalForm = ({
           rules={[
             {
               required: true,
-              message: "请输入收款人姓名",
+              message: "กรุณากรอกข้อมูล",
+            },
+            {
+              pattern: new RegExp(/^[0-9\b]+$/),
+              message: "กรุณากรอกตัวเลขเท่านั้น",
             },
           ]}
         >
-          <Input placeholder="เบอร์โทรศัพท์" />
+          <Input
+            placeholder="เบอร์โทรศัพท์"
+            style={formItemLayout.inputWidth}
+          />
         </Form.Item>
-        <Form.Item name="province" label="จังหวัด">
-          <Select style={{ width: 120 }} onChange={handleChangeAddressProvince}>
+        <Form.Item
+          name="province"
+          label="จังหวัด"
+          rules={[
+            {
+              required: true,
+              message: "กรุณาเลือกจังหวัด",
+            },
+          ]}
+        >
+          <Select style={{ width: 200 }} onChange={handleChangeAddressProvince}>
             {!!dataProvince &&
               !!dataProvince.data &&
               dataProvince.data.map((item) => (
@@ -213,8 +256,17 @@ const PersonalForm = ({
               ))}
           </Select>
         </Form.Item>
-        <Form.Item name="district" label="อำเภอ">
-          <Select style={{ width: 120 }} onChange={handleChangeAddressDistrict}>
+        <Form.Item
+          name="district"
+          label="อำเภอ"
+          rules={[
+            {
+              required: true,
+              message: "กรุณาเลือกอำเภอ",
+            },
+          ]}
+        >
+          <Select style={{ width: 200 }} onChange={handleChangeAddressDistrict}>
             {!!dataDistrict &&
               !!dataDistrict.data &&
               dataDistrict.data.map((item, i) => (
@@ -224,8 +276,17 @@ const PersonalForm = ({
               ))}
           </Select>
         </Form.Item>
-        <Form.Item name="subDistrict" label="ตำบล">
-          <Select style={{ width: 120 }}>
+        <Form.Item
+          name="subDistrict"
+          label="ตำบล"
+          rules={[
+            {
+              required: true,
+              message: "กรุณาเลือกตำบล",
+            },
+          ]}
+        >
+          <Select style={{ width: 200 }}>
             {!!dataSubDistrict &&
               !!dataSubDistrict.data &&
               dataSubDistrict.data.map((item, i) => (
@@ -256,6 +317,7 @@ function mapStateToProps(state) {
     dataProvince: state.dashboard.dataProvince,
     dataDistrict: state.dashboard.dataDistrict,
     dataSubDistrict: state.dashboard.dataSubDistrict,
+   
   };
 }
 

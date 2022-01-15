@@ -10,5 +10,6 @@ export const mapDispatchToProps = (dispatch) => {
     getAddressSubDistrict: (province, district) =>
       dispatch(dashboard.getAddressSubDistrict(province, district)),
     createProfile: (value) => dispatch(dashboard.createProfile(value)),
+    setCurrentStep: (value) => dispatch(dashboard.setCurrentStep(value)),
   };
 };
